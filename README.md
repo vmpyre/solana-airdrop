@@ -1,5 +1,5 @@
 # Solana Airdrop
-Use this script to airdrop custom SOL amount to multiple wallets.
+Use this script to airdrop custom SOL amount to multiple wallets for super cheap. ~0.005 SOL in fees for airdropping to about 1000 wallets.
 
 ## How To Use
 1. Install the required python dependencies using `pip install -r requirements.txt`
@@ -14,11 +14,8 @@ Use this script to airdrop custom SOL amount to multiple wallets.
 > 7VmRUAeFiv25RVWbP995RsvpUbygt4pCXTXsMtX4eptT,0.10
 
 4. Run the `airdrop.py` file using `python airdrop.py` command. 
-
-## Other Info
 - The script should display logs in the terminal as well as save them in the `logs.txt` file for you to review and rerun the script for any failed transactions.
 - The script should check whether you have the required amount of SOL along with an approximate cost of transaction fees before proceeding.
-- This should cost you about ~0.005 SOL for airdropping to about 1000 wallets.
 
 ## Get Our NFT
 - If you found this useful and would like to see more open source development, come chat with me in the 1% Club Chat in the Foxbyte Server: https://discord.gg/foxbyte and get Foxbyte's NFTs here: https://magiceden.io/marketplace/foxbyte.
