@@ -10,8 +10,10 @@ __USE AT YOUR OWN RISK!__ Use this script to airdrop custom SOL amount to multip
 > - `TRANSACTIONS_RUN_SIMULTANEOUSLY` - Number of transactions you want to send concurrently. Adjust this based on your RPC's ratelimits. The higher the number, the faster the airdrop but if your RPC get's ratelimited by putting a higher number, you'll get errors/failed transactions. If you are using SHYFT's RPC shared above, you should be able to do it handle 5-10 transactions simultaneously. Note: a maximum of 10 transactions are allowed to run simultaneously.
 
 3. Add your wallets along with the required solana amount to be airdropped in the `wallets.csv` file. If you replace this file with your own, make sure that the file name is still `wallets.csv`. Format shown below:
-> GeG1K7bSHf7GY9hPeTEVoceYgLTh7A6nSRus9agYhp9J,0.25
-> 7VmRUAeFiv25RVWbP995RsvpUbygt4pCXTXsMtX4eptT,0.10
+```
+GeG1K7bSHf7GY9hPeTEVoceYgLTh7A6nSRus9agYhp9J,0.25
+7VmRUAeFiv25RVWbP995RsvpUbygt4pCXTXsMtX4eptT,0.10
+```
 
 4. Run the `airdrop.py` file using `python airdrop.py` command. 
 - The script should display logs in the terminal as well as save them in the `logs.txt` file for you to review and rerun the script for any failed transactions.
