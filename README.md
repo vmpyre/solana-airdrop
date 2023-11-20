@@ -1,5 +1,5 @@
 # Solana Airdrop
-Use this script to airdrop custom SOL amount to multiple wallets for super cheap. ~0.005 SOL in fees for airdropping to about 1000 wallets.
+__USE AT YOUR OWN RISK!__ Use this script to airdrop custom SOL amount to multiple wallets for super cheap. ~0.005 SOL in fees for airdropping to about 1000 wallets.
 
 ## How To Use
 1. Install the required python dependencies using `pip install -r requirements.txt`
