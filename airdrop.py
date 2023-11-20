@@ -1,6 +1,5 @@
 import os
 import csv
-import time
 import logging
 from dotenv import load_dotenv
 from solders.keypair import Keypair
@@ -8,14 +7,15 @@ from solders.pubkey import Pubkey
 from solana.rpc.api import Client
 from solders.system_program import TransferParams, transfer
 from solana.transaction import Transaction
+import concurrent.futures
 
 LAMPORTS_PER_SOL = 1_000_000_000
 
 class SolanaWalletManager:
-    def __init__(self, rpc_url, sender_private_key, delay_between_transactions, logger, csv_file_path='wallets.csv'):
+    def __init__(self, rpc_url, sender_private_key, transactions_run_simultaneously, logger, csv_file_path='wallets.csv'):
         self.rpc_url = rpc_url
         self.sender_private_key = sender_private_key
-        self.delay_between_transactions = delay_between_transactions
+        self.transactions_run_simultaneously = transactions_run_simultaneously
         self.logger = logger
         self.csv_file_path = csv_file_path
 
@@ -63,30 +63,40 @@ class SolanaWalletManager:
         wallets_failed = 0
         wallets_succeeded = 0
 
-        for receiver, lamports in wallets:
-            if self.perform_transaction(receiver, lamports):
-                wallets_succeeded += 1
-            else:
-                wallets_failed += 1
+        if self.transactions_run_simultaneously > 10:
+            self.logger.error(f'TRANSACTIONS_RUN_SIMULTANEOUSLY set in the .env file can not be above 10.')
+            return
 
-            time.sleep(self.delay_between_transactions)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.transactions_run_simultaneously) as executor:
+            # Submit transactions concurrently
+            futures = [executor.submit(self.perform_transaction, receiver, lamports) for receiver, lamports in wallets]
+
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    if future.result():
+                        wallets_succeeded += 1
+                    else:
+                        wallets_failed += 1
+                except Exception as e:
+                    self.logger.error(f'Exception occurred: {e}')
+                    wallets_failed += 1
 
         self.logger.info(f"""
-        -------------------------------------------------------------------------
-        -------------------------------------------------------------------------
-        Total Wallets Succeeded: {wallets_succeeded}
-        Total Wallets Failed: {wallets_failed}
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+Total Wallets Succeeded: {wallets_succeeded}
+Total Wallets Failed: {wallets_failed}
 
-        Check logs.txt file for errors and other details.
-        -------------------------------------------------------------------------
-        -------------------------------------------------------------------------
-        """)
+Check logs.txt file for errors and other details.
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+""")
 
 # Load environment variables
 load_dotenv()
 rpc_url = os.getenv("SOLANA_RPC_URL")
 sender_private_key = os.getenv("SENDER_WALLET_PRIVATE_KEY_BASE58")
-delay_between_transactions = int(os.getenv("DELAY_IN_SECONDS_BETWEEN_TRANSACTIONS"))
+transactions_run_simultaneously = int(os.getenv("TRANSACTIONS_RUN_SIMULTANEOUSLY"))
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -98,7 +108,7 @@ logger = logging.getLogger()
 logger.addHandler(file_handler)
 
 # Example usage:
-wallet_manager = SolanaWalletManager(rpc_url=rpc_url, sender_private_key=sender_private_key, delay_between_transactions=delay_between_transactions, logger=logger)
+wallet_manager = SolanaWalletManager(rpc_url=rpc_url, sender_private_key=sender_private_key, transactions_run_simultaneously=transactions_run_simultaneously, logger=logger)
 
 # check if balance to be distributed is available in the sender wallet
 wallet_balance_in_lamports = wallet_manager.check_balance().value
