@@ -92,35 +92,48 @@ Check logs.txt file for errors and other details.
 -------------------------------------------------------------------------
 """)
 
-# Load environment variables
-load_dotenv()
-rpc_url = os.getenv("SOLANA_RPC_URL")
-sender_private_key = os.getenv("SENDER_WALLET_PRIVATE_KEY_BASE58")
-transactions_run_simultaneously = int(os.getenv("TRANSACTIONS_RUN_SIMULTANEOUSLY"))
+def setup_logging():
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    file_handler = logging.FileHandler('logs.txt')
+    file_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    logger = logging.getLogger()
+    logger.addHandler(file_handler)
+    return logger
 
-# Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-file_handler = logging.FileHandler('logs.txt')
-file_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-logger = logging.getLogger()
-logger.addHandler(file_handler)
+if __name__ == "__main__":
+    # Load environment variables
+    load_dotenv()
+    rpc_url = os.getenv("SOLANA_RPC_URL")
+    sender_private_key = os.getenv("SENDER_WALLET_PRIVATE_KEY_BASE58")
+    transactions_run_simultaneously = int(os.getenv("TRANSACTIONS_RUN_SIMULTANEOUSLY"))
 
-# Example usage:
-wallet_manager = SolanaWalletManager(rpc_url=rpc_url, sender_private_key=sender_private_key, transactions_run_simultaneously=transactions_run_simultaneously, logger=logger)
+    # Set up logging
+    logger = setup_logging()
 
-# check if balance to be distributed is available in the sender wallet
-wallet_balance_in_lamports = wallet_manager.check_balance().value
-wallet_balance_in_sol = wallet_balance_in_lamports/LAMPORTS_PER_SOL
-total_solana_to_distribute = wallet_manager.total_solana_to_distribute()
-if total_solana_to_distribute > wallet_balance_in_sol:
-    logger.error(f"Your distribution amount ({total_solana_to_distribute} SOL) is higher than the balance in your sender wallet ({wallet_balance_in_sol} SOL).")
-else:
-    logger.info("=========================================================================")
-    logger.info("================================= START =================================")
-    logger.info("=========================================================================")
-    logger.info(f"Total Balance in Sender Wallet: {wallet_balance_in_sol} SOL")
-    logger.info(f"Total Balance in wallets.csv to distribute: {total_solana_to_distribute} SOL")
-    logger.info("=========================================================================")
-    wallet_manager.process_wallets()
+    # Example usage:
+    wallet_manager = SolanaWalletManager(
+        rpc_url=rpc_url,
+        sender_private_key=sender_private_key,
+        transactions_run_simultaneously=transactions_run_simultaneously,
+        logger=logger
+    )
+
+    # Check if the balance to be distributed is available in the sender wallet
+    wallet_balance_in_lamports = wallet_manager.check_balance().value
+    wallet_balance_in_sol = wallet_balance_in_lamports / LAMPORTS_PER_SOL
+    total_solana_to_distribute = wallet_manager.total_solana_to_distribute()
+
+    if total_solana_to_distribute > wallet_balance_in_sol:
+        logger.error(
+            f"Your distribution amount ({total_solana_to_distribute} SOL) is higher than the balance in your sender wallet ({wallet_balance_in_sol} SOL)."
+        )
+    else:
+        logger.info("=========================================================================")
+        logger.info("================================= START =================================")
+        logger.info("=========================================================================")
+        logger.info(f"Total Balance in Sender Wallet: {wallet_balance_in_sol} SOL")
+        logger.info(f"Total Balance in wallets.csv to distribute: {total_solana_to_distribute} SOL")
+        logger.info("=========================================================================")
+        wallet_manager.process_wallets()
