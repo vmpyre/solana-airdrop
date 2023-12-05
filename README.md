@@ -2,6 +2,8 @@
 __USE AT YOUR OWN RISK!__ Use this script to airdrop custom SOL amount to multiple wallets for super cheap. ~0.005 SOL in fees for airdropping to about 1000 wallets.
 
 ## How To Use
+0. (Pre-req) Install python - https://www.python.org/downloads/
+
 1. Install the required python dependencies using `pip install -r requirements.txt`
 
 2. Create a `.env` file in the directory (use `.env.example` as reference):
