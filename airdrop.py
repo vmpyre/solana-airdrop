@@ -81,7 +81,7 @@ class SolanaWalletManager:
                 source=self.sender.pubkey(),
                 mint=Pubkey.from_string(spl_token_address),
                 dest=receiver,
-                owner=self.sender,
+                owner=self.sender.pubkey(),
                 amount=spl_amount,
                 decimals=0,
                 signers=[]
@@ -191,7 +191,6 @@ if __name__ == "__main__":
     # Set up logging
     logger = setup_logging()
 
-    # Example usage:
     wallet_manager = SolanaWalletManager(
         rpc_url=rpc_url,
         sender_private_key=sender_private_key,
@@ -213,7 +212,7 @@ if __name__ == "__main__":
             logger.info("=========================================================================")
             logger.info("========================== CONFIRM BELOW ================================")
             logger.info("=========================================================================")
-            logger.info(f"Total SPL ({spl_token_address_to_send}) in wallets.csv to distribute: {total.get("total_spl")}")
+            logger.info(f"Total SPL ({spl_token_address_to_send}) in wallets.csv to distribute: {total.get('total_spl')}")
             logger.info("=========================================================================")
             user_input = input("Should I proceed? (Type yes or no!)")
             if user_input.lower() == "yes":
