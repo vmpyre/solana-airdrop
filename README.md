@@ -1,5 +1,5 @@
 # Solana Airdrop
-__USE AT YOUR OWN RISK!__ Use this script to airdrop custom SOL amount to multiple wallets for super cheap. ~0.005 SOL in fees for airdropping to about 1000 wallets.
+__USE AT YOUR OWN RISK!__ Use this script to airdrop SOL or SPL tokens to multiple wallets for super cheap. ~0.005 SOL in fees for airdropping to about 1000 wallets.
 
 ## How To Use
 0. (Pre-req) Install python - https://www.python.org/downloads/
@@ -10,12 +10,14 @@ __USE AT YOUR OWN RISK!__ Use this script to airdrop custom SOL amount to multip
 > - `SOLANA_RPC_URL` - Get a free RPC from our friends at https://shyft.to/
 > - `SENDER_WALLET_PRIVATE_KEY_BASE58` - Private key for the wallet you want the sends from; import this from phantom wallet
 > - `TRANSACTIONS_RUN_SIMULTANEOUSLY` - Number of transactions you want to send concurrently. Adjust this based on your RPC's ratelimits. The higher the number, the faster the airdrop but if your RPC get's ratelimited by putting a higher number, you'll get errors/failed transactions. If you are using SHYFT's RPC shared above, you should be able to do it handle 5-10 transactions simultaneously. Note: a maximum of 10 transactions are allowed to run simultaneously.
+> - `SPL_TOKEN_ADDRESS_TO_SEND` [Optional] - Leave this empty if you want to send SOL. Use this if you want to send SPL tokens. Add add the token mint address and the program will automatically switch to SPL token airdrop instead of SOL airdrop. Note: When airdropping SPL tokens, use integer amounts instead of float/decimals.
 
 3. Add your wallets along with the required solana amount to be airdropped in the `wallets.csv` file. If you replace this file with your own, make sure that the file name is still `wallets.csv`. Format shown below:
 ```
 GeG1K7bSHf7GY9hPeTEVoceYgLTh7A6nSRus9agYhp9J,0.25
 7VmRUAeFiv25RVWbP995RsvpUbygt4pCXTXsMtX4eptT,0.10
 ```
+Note: Don't use decimal numbers when airdropping SPL tokens.
 
 4. Run the `airdrop.py` file using `python airdrop.py` command. 
 - The script should display logs in the terminal as well as save them in the `logs.txt` file for you to review and rerun the script for any failed transactions.
