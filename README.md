@@ -7,7 +7,7 @@ __USE AT YOUR OWN RISK!__ Use this script to airdrop custom SOL amount to multip
 1. Install the required python dependencies using `pip install -r requirements.txt`
 
 2. Create a `.env` file in the directory (use `.env.example` as reference):
-> - `SOLANA_RPC_URL` - Get a free RPC from our friends at https://shyft.to/
+> - `SOLANA_RPC_URL` - Get a free RPC from our friends at https://helius.dev
 > - `SENDER_WALLET_PRIVATE_KEY_BASE58` - Private key for the wallet you want the sends from; import this from phantom wallet
 > - `TRANSACTIONS_RUN_SIMULTANEOUSLY` - Number of transactions you want to send concurrently. Adjust this based on your RPC's ratelimits. The higher the number, the faster the airdrop but if your RPC get's ratelimited by putting a higher number, you'll get errors/failed transactions. If you are using SHYFT's RPC shared above, you should be able to do it handle 5-10 transactions simultaneously. Note: a maximum of 10 transactions are allowed to run simultaneously.
 
